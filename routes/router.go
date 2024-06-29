@@ -27,4 +27,13 @@ func SetupRouter(r *gin.Engine) {
     r.DELETE("/user-admin/delete/:id", userAdminController.DeleteData)
     r.GET("/user-admin/getData/:id", userAdminController.GetAdminUser)
     r.PUT("/user-admin/update/:id", userAdminController.UpdateData)
+
+	// New UserController routes
+	userController := controllers.NewUserController()
+	r.GET("/user", userController.Index)
+	r.GET("/user/data", userController.GetUsers)
+	r.POST("/user/insert", userController.InsertData)
+	r.DELETE("/user/delete/:id", userController.DeleteData)
+	r.GET("/user/getData/:id", userController.GetUser)
+	r.PUT("/user/update/:id", userController.UpdateData)
 }

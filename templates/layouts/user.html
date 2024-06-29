@@ -1,7 +1,6 @@
 {{ template "header" . }}
 <main>
-    <!-- modal tambah User -->
-    <!-- Modal -->
+    <!-- Modal for Adding User -->
     <div class="modal fade" id="insertModal" role="dialog" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -17,41 +16,35 @@
                             <input type="text" class="form-control" id="name" name="name" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="Email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="Email" name="email" required autocomplete="off">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="Phone" class="form-label">Phone</label>
-                            <input type="tel" maxlength="13" class="form-control" id="Phone" name="no_telepon" required autocomplete="off">
+                            <label for="no_telepon" class="form-label">Phone</label>
+                            <input type="tel" maxlength="13" class="form-control" id="no_telepon" name="no_telepon" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="Level" class="form-label">Level</label>
-                            <select class="form-select" id="Level" name="level" required autocomplete="off">
-                                <option value="admin">Admin</option>
-                                <option value="owner">Owner</option>
-                            </select>
+                            <label for="alamat" class="form-label">Address</label>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="3" required autocomplete="off"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="Password" class="form-label">Password</label>
-                            <input type="text" class="form-control" id="Password" name="password" required autocomplete="off">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="PasswordConfirmation" class="form-label">Password Confirmation</label>
-                            <input type="text" class="form-control" id="PasswordConfirmation" name="password_confirmation" required autocomplete="off">
+                            <label for="password_confirmation" class="form-label">Password Confirmation</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required autocomplete="off">
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button id="button" type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="button" type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <!-- modal tambah User -->
-
-    <!-- modal Edit User -->
-    <!-- Modal -->
+    <!-- Modal for Editing User -->
     <div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -69,48 +62,45 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit_email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="edit_email" name="email" required autocomplete="off">
+                            <input type="email" class="form-control" id="edit_email" name="email" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="edit_phone" class="form-label">Phone</label>
-                            <input type="tel" maxlength="13" class="form-control" id="edit_phone" name="no_telepon" required autocomplete="off">
+                            <label for="edit_no_telepon" class="form-label">Phone</label>
+                            <input type="tel" maxlength="13" class="form-control" id="edit_no_telepon" name="no_telepon" required autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="edit_level" class="form-label">Level</label>
-                            <input type="text" class="form-control" id="edit_level" name="level" required autocomplete="off">
+                            <label for="edit_alamat" class="form-label">Address</label>
+                            <textarea class="form-control" id="edit_alamat" name="alamat" rows="3" required autocomplete="off"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="Password" class="form-label">Password</label>
-                            <input type="text" class="form-control" id="edit_password" name="password" required autocomplete="off">
+                            <label for="edit_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="edit_password" name="password">
                         </div>
                         <div class="mb-3">
-                            <label for="PasswordConfirmation" class="form-label">Password Confirmation</label>
-                            <input type="text" class="form-control" id="edit_password_confirmation" name="password_confirmation" required autocomplete="off">
+                            <label for="edit_password_confirmation" class="form-label">Password Confirmation</label>
+                            <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation">
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button id="button" type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="button" type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <!-- modal Edit User -->
-
-    <div class="container-fluid px-4 mt-5 ">
+    <!-- Main Content -->
+    <div class="container-fluid px-4 mt-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-dark rounded p-3">
                 <li class="breadcrumb-item active text-white" aria-current="page">Dashboard</li>
                 <li class="breadcrumb-item active text-white" aria-current="page">User Admin</li>
             </ol>
         </nav>
-
         <div class="border rounded p-3">
             <button class="btn btn-primary" id="tambah_data" style="float: right;" data-bs-toggle="modal" data-bs-target="#insertModal">
                 <i class="fas fa-plus"></i>
             </button>
-
             <table id="user-table" class="display table-responsive table-bordered" style="width:100%">
                 <thead style="background-color: #212529; color: white;">
                     <tr>
@@ -119,77 +109,68 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>No Telepon</th>
-                        <th>Level</th>
+                        <th>Alamat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <!-- Add your table content here -->
             </table>
         </div>
     </div>
-
 </main>
-<!-- Modal -->
-
-<!-- Footer -->
 {{ template "footer" . }}
-<!-- Footer -->
-
 <script type="text/javascript">
     var csrfToken = document.querySelector('input[name="_csrf"]').value;
 
     const itemTable = $('#user-table').DataTable({
-        ajax: '/user-admin/data',
+        ajax: '/user/data',
         processing: true,
         serverSide: true,
-        searching: true, // Enable search feature
+        searching: true,
         responsive: true,
         columnDefs: [
-            { "orderable": true, "targets": 0 },  // Enable sorting on the first column (First Name)
-            { "orderable": false, "targets": '_all' }  // Disable sorting on all other columns
-            
+            { "orderable": true, "targets": 0 },
+            { "orderable": false, "targets": '_all' }
         ],
-        dom: 'Bfrtip', // Include buttons with default layout
-    buttons: [
-        {
-            extend: 'copy',
-            text: '<i class="fas fa-copy"></i>',
-            className: 'btn btn-secondary',
-            titleAttr: 'Copy'
-        },
-        {
-            extend: 'excel',
-            text: '<i class="fas fa-file-excel"></i>',
-            className: 'btn btn-success',
-            titleAttr: 'Export to Excel'
-        },
-        {
-            extend: 'pdf',
-            text: '<i class="fas fa-file-pdf"></i>',
-            className: 'btn btn-danger',
-            titleAttr: 'Export to PDF'
-        },
-        {
-            extend: 'print',
-            text: '<i class="fas fa-print"></i>',
-            className: 'btn btn-info',
-            titleAttr: 'Print'
-        }
-    ],
-        columns: [
-        { 
-            data: null,
-            className: 'text-center',
-            render: function(data, type, row, meta) {
-                // Render index column starting from 1
-                return meta.row + 1;
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copy',
+                text: '<i class="fas fa-copy"></i>',
+                className: 'btn btn-secondary',
+                titleAttr: 'Copy'
+            },
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel"></i>',
+                className: 'btn btn-success',
+                titleAttr: 'Export to Excel'
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="fas fa-file-pdf"></i>',
+                className: 'btn btn-danger',
+                titleAttr: 'Export to PDF'
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print"></i>',
+                className: 'btn btn-info',
+                titleAttr: 'Print'
             }
-        },
+        ],
+        columns: [
+            { 
+                data: null,
+                className: 'text-center',
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
             { data: 'id', className: 'text-center' },
             { data: 'name', className: 'text-center' },
             { data: 'email', className: 'text-center' },
             { data: 'no_telepon', className: 'text-center' },
-            { data: 'level', className: 'text-center' },
+            { data: 'alamat', className: 'text-center' },
             { 
                 data: 'aksi',
                 className: 'text-center',
@@ -198,24 +179,30 @@
                     return `
                     <div class="row">
                         <div class="col-auto mb-1">
-                            <button class="btn btn-warning btn-xs " id="edit_data" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="updateForm(${row.id})"><i class="fas fa-pencil"></i></button>
+                            <button class="btn btn-warning btn-xs" id="edit_data" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="updateForm('${row.id}')"><i class="fas fa-pencil"></i></button>
                         </div>
-
                         <div class="col-auto mb-1">
-                            <button class="btn btn-danger btn-xs " id="delete_data" onclick="deleteData(${row.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>`;
                 }
-            },
-        ],
+            }
+        ]
     });
-   document.addEventListener('DOMContentLoaded', function() {
 
-        document.getElementById('formInsert').addEventListener('submit', function(event) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle form submissions
+        handleFormSubmit('formInsert', 'insert');
+        handleFormSubmit('formUpdate', 'update');
+    });
+
+    function handleFormSubmit(formId, action) {
+        if(action == "insert"){
+            document.getElementById('formInsert').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const password = document.getElementById('Password').value;
-            const passwordConfirmation = document.getElementById('PasswordConfirmation').value;
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
 
             if (password !== passwordConfirmation) {
                 Swal.fire({
@@ -228,8 +215,7 @@
 
             var formData = new FormData(event.target);
             var json = JSON.stringify(Object.fromEntries(formData));
-            console.log(json);
-            fetch('/user-admin/insert', {
+            fetch('/user/insert', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -265,8 +251,9 @@
                 });
             });
         });
-
-        document.getElementById('formUpdate').addEventListener('submit', function(event) {
+        }
+        else if(action == "update"){
+            document.getElementById('formUpdate').addEventListener('submit', function(event) {
             event.preventDefault();
             const password = document.getElementById('edit_password').value;
             const passwordConfirmation = document.getElementById('edit_password_confirmation').value;
@@ -279,10 +266,11 @@
                     });
                 return;
             }
+
             var formData = new FormData(event.target);
             var json = JSON.stringify(Object.fromEntries(formData));
             var id = document.getElementById('edit_id').value;
-            fetch(`/user-admin/update/${id}`, {
+            fetch(`/user/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -318,50 +306,26 @@
                 });
             });
         });
-
-        // Reload the table data every 60 seconds
-        setInterval(() => {
-            itemTable.ajax.reload(null, false); // false to keep the current page
-        }, 60000); // 60 seconds
-
-    });
-
-    function updateForm(id) {
-        fetch(`/user-admin/getData/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then(response => {
-            return response.json().then(data => {
-                return { status: response.status, body: data };
-            });
-        }).then(data => {
-            if (data.status < 300) {
-                document.getElementById('edit_id').value = data.body.data.id;
-                document.getElementById('edit_email').value = data.body.data.email;
-                document.getElementById('edit_name').value = data.body.data.name;
-                document.getElementById('edit_phone').value = data.body.data.no_telepon;
-                document.getElementById('edit_level').value = data.body.data.level;
-            } else {
-                $('#updateModal').modal('hide');
-                Swal.fire({
-                    title: "Error",
-                    text: data.body.message,
-                    icon: "error"
-                });
-            }
-        }).catch(error => {
-            $('#updateModal').modal('hide');
-            Swal.fire({
-                title: "Something went wrong",
-                text: error.message,
-                icon: "error"
-            });
-        });
+        }
     }
 
-    function deleteData(id){
+    function updateForm(id) {
+        fetch(`/user/getData/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.data) {
+                    let user = data.data;
+                    document.getElementById('edit_id').value = user.id;
+                    document.getElementById('edit_name').value = user.name;
+                    document.getElementById('edit_email').value = user.email;
+                    document.getElementById('edit_no_telepon').value = user.no_telepon;
+                    document.getElementById('edit_alamat').value = user.alamat;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function deleteData(id) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "btn btn-success",
@@ -379,7 +343,7 @@
                 reverseButtons: true
             }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`/user-admin/delete/${id}`, {
+                fetch(`/user/delete/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -423,5 +387,4 @@
             }
         });
     }
-
 </script>
