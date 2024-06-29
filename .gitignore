@@ -1,0 +1,36 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Binaries for programs and plugins
+*.exe
+*.out
+*.o
+
+# Go Modules
+vendor/
+
+# Gin
+/.gin-bin/
+/.gin-bin/*
+
+# IDE-specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build output
+/build/
+
+# Test and coverage files
+/coverage/
+/test-results/
+
+# Dependency directories
+/Godeps/
+/vendor/
+.env
