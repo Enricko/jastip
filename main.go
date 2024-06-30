@@ -3,15 +3,14 @@ package main
 import (
 	"golang-app/database"
 	"golang-app/routes"
+	"golang-app/app/middleware"
 	"log"
-	"net/http"
-	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	csrf "github.com/utrack/gin-csrf"
+
 )
 
 func main() {
@@ -27,13 +26,13 @@ func main() {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
-	r.Use(csrf.Middleware(csrf.Options{
-		Secret: os.Getenv("SECRET"),
-		ErrorFunc: func(c *gin.Context) {
-			c.String(http.StatusBadRequest, "CSRF token mismatch")
-			c.Abort()
-		},
-	}))
+	excludedPaths := []string{
+		"/api/auth",
+		// Add more paths as needed
+	}
+
+	// Use the NoCSRF middleware with the exclusion list
+	r.Use(middleware.NoCSRF(excludedPaths))
 
 	r.LoadHTMLGlob("templates/**/*")
 	routes.SetupRouter(r)

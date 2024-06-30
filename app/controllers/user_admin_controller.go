@@ -101,81 +101,112 @@ func (r *UserAdminController) GetAdminUser(c *gin.Context) {
 }
 
 func (r *UserAdminController) InsertData(c *gin.Context) {
-	var data models.Adminstrator
-	if err := c.ShouldBind(&data); err != nil {
+	var input struct {
+		Name                 string `form:"name" json:"name" binding:"required"`
+		Email                string `form:"email" json:"email" binding:"required,email"`
+		NoTelepon            string `form:"no_telepon" json:"no_telepon" binding:"required"`
+		Level                string `form:"level" json:"level" binding:"required"`
+		Password             string `form:"password" json:"password" binding:"required,min=6"`
+		PasswordConfirmation string `form:"password_confirmation" json:"password_confirmation" binding:"required,min=6"`
+	}
+
+	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to bind data", "message": err.Error()})
+		return
+	}
+
+	if input.Password != input.PasswordConfirmation {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password confirmation does not match", "message": "Password confirmation does not match"})
+		return
+	}
+
+	var existingAdmin models.Adminstrator
+	if err := database.DB.Where("email = ?", input.Email).First(&existingAdmin).Error; err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "Email already exists", "message": "Email already exists"})
 		return
 	}
 
 	// Generate a random UUID for ID
 	id := uuid.New().String()
-	data.ID = id
+	admin := models.Adminstrator{
+		ID:        id,
+		Name:      input.Name,
+		Email:     input.Email,
+		NoTelepon: input.NoTelepon,
+		Level:     models.Level(input.Level),
+	}
 
 	// Encrypt password before inserting into database
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt password", "message": err.Error()})
 		return
 	}
-	data.Password = string(hashedPassword)
+	admin.Password = string(hashedPassword)
 
 	// Insert the data into the database
-	if err := database.DB.Create(&data).Error; err != nil {
+	if err := database.DB.Create(&admin).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert data", "message": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Data Inserted"})
-
 }
 
 func (r *UserAdminController) UpdateData(c *gin.Context) {
 	id := c.Param("id")
-	var input models.Adminstrator
-	if err := c.ShouldBindJSON(&input); err != nil {
+	var input struct {
+		Name                 string `form:"name" json:"name" binding:"required"`
+		Email                string `form:"email" json:"email" binding:"required,email"`
+		NoTelepon            string `form:"no_telepon" json:"no_telepon" binding:"required"`
+		Level                string `form:"level" json:"level" binding:"required"`
+		Password             string `form:"password" json:"password" binding:"required,min=6"`
+		PasswordConfirmation string `form:"password_confirmation" json:"password_confirmation" binding:"required,min=6"`
+	}
+
+	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	var user models.Adminstrator
-	if err := database.DB.First(&user, "id = ?", id).Error; err != nil {
+	var admin models.Adminstrator
+	if err := database.DB.First(&admin, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Admin user not found"})
 		return
 	}
 
-	user.Email = input.Email
-	user.Name = input.Name
-	user.NoTelepon = input.NoTelepon
-	user.Level = input.Level
-
-	if input.Password != "" {
-		// Hash the updated password before saving
-		hashedPassword, err := hashPassword(input.Password)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to hash password"})
-			return
-		}
-		user.Password = hashedPassword
+	if input.Password != input.PasswordConfirmation {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password confirmation does not match", "message": "Password confirmation does not match"})
+		return
 	}
 
-	if err := database.DB.Save(&user).Error; err != nil {
-		if strings.Contains(err.Error(), "unique constraint") {
-			c.JSON(http.StatusConflict, gin.H{"message": "Duplicate entry"})
+	if admin.Email != input.Email {
+		var existingAdmin models.Adminstrator
+		if err := database.DB.Where("email = ?", input.Email).First(&existingAdmin).Error; err == nil {
+			c.JSON(http.StatusConflict, gin.H{"error": "Email already exists", "message": "Email already exists"})
 			return
 		}
+	}
+
+	admin.Email = input.Email
+	admin.Name = input.Name
+	admin.NoTelepon = input.NoTelepon
+	admin.Level = models.Level(input.Level)
+
+	// Hash the updated password before saving
+	hashedPassword, err := hashPassword(input.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to hash password"})
+		return
+	}
+	admin.Password = hashedPassword
+
+	if err := database.DB.Save(&admin).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update admin user"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Admin user updated successfully"})
-}
-
-func hashPassword(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", err
-	}
-	return string(hashedPassword), nil
 }
 
 func (r *UserAdminController) DeleteData(c *gin.Context) {
@@ -197,4 +228,12 @@ func (r *UserAdminController) DeleteData(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Admin user Deleted"})
+}
+
+func hashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), nil
 }

@@ -102,27 +102,47 @@ func (r *UserController) GetUser(c *gin.Context) {
 }
 
 func (r *UserController) InsertData(c *gin.Context) {
-	var data models.User
-	if err := c.ShouldBind(&data); err != nil {
+	var input struct {
+		Name                 string `form:"name" json:"name" binding:"required"`
+		Email                string `form:"email" json:"email" binding:"required,email"`
+		NoTelepon            string `form:"no_telepon" json:"no_telepon" binding:"required"`
+		Alamat               string `form:"alamat" json:"alamat" binding:"required"`
+		Password             string `form:"password" json:"password" binding:"required,min=6"`
+		PasswordConfirmation string `form:"password_confirmation" json:"password_confirmation" binding:"required,min=6"`
+	}
+
+	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to bind data", "message": err.Error()})
 		return
 	}
 
-	// Generate a random UUID for ID
-	id := uuid.New().String()
-	data.ID = id
+	if input.Password != input.PasswordConfirmation {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password confirmation does not match", "message": "Password confirmation does not match"})
+		return
+	}
 
-	// Encrypt password before inserting into database
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
+	id := uuid.New().String()
+	user := models.User{
+		ID:        id,
+		Name:      input.Name,
+		Email:     input.Email,
+		NoTelepon: input.NoTelepon,
+		Alamat:    input.Alamat,
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt password", "message": err.Error()})
 		return
 	}
-	data.Password = string(hashedPassword)
+	user.Password = string(hashedPassword)
 
-	// Insert the data into the database
-	if err := database.DB.Create(&data).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert data", "message": err.Error()})
+	if err := database.DB.Create(&user).Error; err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") && strings.Contains(err.Error(), "for key 'users.uix_users_email'") {
+			c.JSON(http.StatusConflict, gin.H{"message": "Email already exists"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		}
 		return
 	}
 
@@ -131,8 +151,16 @@ func (r *UserController) InsertData(c *gin.Context) {
 
 func (r *UserController) UpdateData(c *gin.Context) {
 	id := c.Param("id")
-	var input models.User
-	if err := c.ShouldBindJSON(&input); err != nil {
+	var input struct {
+		Name                 string `form:"name" json:"name" binding:"required"`
+		Email                string `form:"email" json:"email" binding:"required,email"`
+		NoTelepon            string `form:"no_telepon" json:"no_telepon" binding:"required"`
+		Alamat               string `form:"alamat" json:"alamat" binding:"required"`
+		Password             string `form:"password" json:"password"`
+		PasswordConfirmation string `form:"password_confirmation" json:"password_confirmation" binding:"required,min=6"`
+	}
+
+	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
@@ -148,22 +176,24 @@ func (r *UserController) UpdateData(c *gin.Context) {
 	user.NoTelepon = input.NoTelepon
 	user.Alamat = input.Alamat
 
-	if input.Password != "" {
-		// Hash the updated password before saving
-		hashedPassword, err := hashPassword(input.Password)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to hash password"})
-			return
-		}
-		user.Password = hashedPassword
+	if input.Password != input.PasswordConfirmation {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password confirmation does not match", "message": "Password confirmation does not match"})
+		return
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to hash password"})
+		return
+	}
+	user.Password = string(hashedPassword)
+
 	if err := database.DB.Save(&user).Error; err != nil {
-		if strings.Contains(err.Error(), "unique constraint") {
-			c.JSON(http.StatusConflict, gin.H{"message": "Duplicate entry"})
-			return
+		if strings.Contains(err.Error(), "Duplicate entry") && strings.Contains(err.Error(), "for key 'users.uix_users_email'") {
+			c.JSON(http.StatusConflict, gin.H{"message": "Email already exists"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update user"})
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update user"})
 		return
 	}
 

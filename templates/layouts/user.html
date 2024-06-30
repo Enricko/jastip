@@ -94,7 +94,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-dark rounded p-3">
                 <li class="breadcrumb-item active text-white" aria-current="page">Dashboard</li>
-                <li class="breadcrumb-item active text-white" aria-current="page">User Admin</li>
+                <li class="breadcrumb-item active text-white" aria-current="page">User</li>
             </ol>
         </nav>
         <div class="border rounded p-3">
@@ -214,14 +214,12 @@
             }
 
             var formData = new FormData(event.target);
-            var json = JSON.stringify(Object.fromEntries(formData));
             fetch('/user/insert', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRF-Token': formData.get('_csrf')
                 },
-                body: json
+                body: formData
             }).then(response => {
                 return response.json().then(data => {
                     return { status: response.status, body: data };
@@ -268,15 +266,13 @@
             }
 
             var formData = new FormData(event.target);
-            var json = JSON.stringify(Object.fromEntries(formData));
             var id = document.getElementById('edit_id').value;
             fetch(`/user/update/${id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
                     'X-CSRF-Token': formData.get('_csrf')
                 },
-                body: json
+                body: formData
             }).then(response => {
                 return response.json().then(data => {
                     return { status: response.status, body: data };
@@ -346,7 +342,6 @@
                 fetch(`/user/delete/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'Content-Type': 'application/json',
                         'X-CSRF-Token': csrfToken
                     }
                 }).then(response => {
