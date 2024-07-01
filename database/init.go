@@ -37,4 +37,6 @@ func Init() {
 	}
 
 	DB.AutoMigrate(&models.Administrator{},&models.User{})
+
+	SeedAdminstrators()
 }

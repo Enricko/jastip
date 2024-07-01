@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
 )
 
 var jwtKey = []byte(os.Getenv("SECRET_KEY"))
@@ -124,6 +125,7 @@ func (r *AuthController) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
+		"message":"Login successful",
 		"token": tokenString,
 		"user":  user,
 	})
