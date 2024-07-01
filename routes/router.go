@@ -51,8 +51,6 @@ func SetupRouter(r *gin.Engine) {
 		}
 
 	}
-
-	// Login routes
 	
 
 	//  API
