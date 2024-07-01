@@ -5,7 +5,6 @@ import (
 	"golang-app/app/controllers/api"
 
 	"github.com/gin-gonic/gin"
-
 )
 
 func SetupRouter(r *gin.Engine) {
@@ -16,15 +15,13 @@ func SetupRouter(r *gin.Engine) {
 
 	userAdminController := controllers.NewUserAdminController()
 
-
-
 	userAdminRoutes := r.Group("/user-admin")
 	{
 		userAdminRoutes.GET("/", userAdminController.Index)
-	
+
 		userAdminRoutes.GET("/data", userAdminController.GetAdminUsers)
 		userAdminRoutes.POST("/insert", userAdminController.InsertData)
-		
+
 		userAdminRoutes.DELETE("/delete/:id", userAdminController.DeleteData)
 		userAdminRoutes.GET("/getData/:id", userAdminController.GetAdminUser)
 		userAdminRoutes.PUT("/update/:id", userAdminController.UpdateData)
@@ -39,9 +36,13 @@ func SetupRouter(r *gin.Engine) {
 	r.GET("/user/getData/:id", userController.GetUser)
 	r.PUT("/user/update/:id", userController.UpdateData)
 
+	// Login routes
+	loginController := controllers.NewLoginController()
+	r.GET("/login", loginController.Index)
+
 	//  API
 	apiRoutes := r.Group("/api")
-    {
+	{
 		authController := api.NewAuthController()
 
 		authRoutes := apiRoutes.Group("/auth")
@@ -51,5 +52,5 @@ func SetupRouter(r *gin.Engine) {
 			authRoutes.POST("/logout", authController.Logout)
 			authRoutes.GET("/validate", authController.ValidateToken)
 		}
-    }
+	}
 }
