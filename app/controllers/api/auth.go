@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var jwtKey = []byte("your_secret_key")
+var jwtKey = []byte(os.Getenv("SECRET_KEY"))
 
 type Claims struct {
 	Email string `json:"email"`

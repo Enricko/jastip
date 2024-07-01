@@ -3,42 +3,57 @@ package routes
 import (
 	"golang-app/app/controllers"
 	"golang-app/app/controllers/api"
+	"golang-app/app/middleware"
 
 	"github.com/gin-gonic/gin"
+
 )
 
 func SetupRouter(r *gin.Engine) {
-
+	
 	dashboardController := controllers.NewDashboardController()
-
-	r.GET("/dashboard", dashboardController.Index)
-
 	userAdminController := controllers.NewUserAdminController()
+	userController := controllers.NewUserController()
+	authController := controllers.NewAuthController()
 
-	userAdminRoutes := r.Group("/user-admin")
+	r.GET("/login", middleware.RedirectIfLoggedIn(), authController.LoginPage)
+	r.POST("/login", authController.Login)
+	r.GET("/logout", authController.Logout)
+
+	
+	r.Use(middleware.AuthMiddleware())
 	{
-		userAdminRoutes.GET("/", userAdminController.Index)
+		r.GET("/dashboard", dashboardController.Index)
 
-		userAdminRoutes.GET("/data", userAdminController.GetAdminUsers)
-		userAdminRoutes.POST("/insert", userAdminController.InsertData)
+		// ADMIN ROLE ROUTE
+		r.Use(middleware.RoleMiddleware("admin"))
+		{
+			userAdminRoutes := r.Group("/user-admin")
+			{
+				userAdminRoutes.GET("/", userAdminController.Index)
+		
+				userAdminRoutes.GET("/data", userAdminController.GetAdminUsers)
+				userAdminRoutes.POST("/insert", userAdminController.InsertData)
+		
+				userAdminRoutes.DELETE("/delete/:id", userAdminController.DeleteData)
+				userAdminRoutes.GET("/getData/:id", userAdminController.GetAdminUser)
+				userAdminRoutes.PUT("/update/:id", userAdminController.UpdateData)
+			}
+			userRoutes := r.Group("/user")
+			{
+				userRoutes.GET("/", userController.Index)
+				userRoutes.GET("/data", userController.GetUsers)
+				userRoutes.POST("/insert", userController.InsertData)
+				userRoutes.DELETE("/delete/:id", userController.DeleteData)
+				userRoutes.GET("/getData/:id", userController.GetUser)
+				userRoutes.PUT("/update/:id", userController.UpdateData)
+			}
+		}
 
-		userAdminRoutes.DELETE("/delete/:id", userAdminController.DeleteData)
-		userAdminRoutes.GET("/getData/:id", userAdminController.GetAdminUser)
-		userAdminRoutes.PUT("/update/:id", userAdminController.UpdateData)
 	}
 
-	// New UserController routes
-	userController := controllers.NewUserController()
-	r.GET("/user", userController.Index)
-	r.GET("/user/data", userController.GetUsers)
-	r.POST("/user/insert", userController.InsertData)
-	r.DELETE("/user/delete/:id", userController.DeleteData)
-	r.GET("/user/getData/:id", userController.GetUser)
-	r.PUT("/user/update/:id", userController.UpdateData)
-
 	// Login routes
-	loginController := controllers.NewLoginController()
-	r.GET("/login", loginController.Index)
+	
 
 	//  API
 	apiRoutes := r.Group("/api")

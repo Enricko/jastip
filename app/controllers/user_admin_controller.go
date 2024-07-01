@@ -33,7 +33,7 @@ func (r *UserAdminController) Index(c *gin.Context) {
 }
 
 func (r *UserAdminController) GetAdminUsers(c *gin.Context) {
-	var data []models.Adminstrator
+	var data []models.Administrator
 	database.DB.Find(&data)
 
 	draw, _ := strconv.Atoi(c.Query("draw"))
@@ -41,7 +41,7 @@ func (r *UserAdminController) GetAdminUsers(c *gin.Context) {
 	length, _ := strconv.Atoi(c.Query("length"))
 	search := c.Query("search[value]")
 
-	filteredData := make([]models.Adminstrator, 0)
+	filteredData := make([]models.Administrator, 0)
 	for _, user := range data {
 		v := reflect.ValueOf(user)
 		for i := 0; i < v.NumField(); i++ {
@@ -88,7 +88,7 @@ func (r *UserAdminController) GetAdminUsers(c *gin.Context) {
 func (r *UserAdminController) GetAdminUser(c *gin.Context) {
 	id := c.Param("id")
 
-	var user models.Adminstrator
+	var user models.Administrator
 	if err := database.DB.First(&user, "id = ?", id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"message": "Admin User not found"})
@@ -120,7 +120,7 @@ func (r *UserAdminController) InsertData(c *gin.Context) {
 		return
 	}
 
-	var existingAdmin models.Adminstrator
+	var existingAdmin models.Administrator
 	if err := database.DB.Where("email = ?", input.Email).First(&existingAdmin).Error; err == nil {
 		c.JSON(http.StatusConflict, gin.H{"error": "Email already exists", "message": "Email already exists"})
 		return
@@ -128,7 +128,7 @@ func (r *UserAdminController) InsertData(c *gin.Context) {
 
 	// Generate a random UUID for ID
 	id := uuid.New().String()
-	admin := models.Adminstrator{
+	admin := models.Administrator{
 		ID:        id,
 		Name:      input.Name,
 		Email:     input.Email,
@@ -169,7 +169,7 @@ func (r *UserAdminController) UpdateData(c *gin.Context) {
 		return
 	}
 
-	var admin models.Adminstrator
+	var admin models.Administrator
 	if err := database.DB.First(&admin, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Admin user not found"})
 		return
@@ -181,7 +181,7 @@ func (r *UserAdminController) UpdateData(c *gin.Context) {
 	}
 
 	if admin.Email != input.Email {
-		var existingAdmin models.Adminstrator
+		var existingAdmin models.Administrator
 		if err := database.DB.Where("email = ?", input.Email).First(&existingAdmin).Error; err == nil {
 			c.JSON(http.StatusConflict, gin.H{"error": "Email already exists", "message": "Email already exists"})
 			return
@@ -212,7 +212,7 @@ func (r *UserAdminController) UpdateData(c *gin.Context) {
 func (r *UserAdminController) DeleteData(c *gin.Context) {
 	id := c.Param("id")
 
-	var user models.Adminstrator
+	var user models.Administrator
 	if err := database.DB.First(&user, "id = ?", id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"message": "Admin User not found"})

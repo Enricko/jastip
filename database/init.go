@@ -36,5 +36,5 @@ func Init() {
 		panic(errDb.Error())
 	}
 
-	DB.AutoMigrate(&models.Adminstrator{},&models.User{})
+	DB.AutoMigrate(&models.Administrator{},&models.User{})
 }

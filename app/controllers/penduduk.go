@@ -23,7 +23,7 @@ func NewPendudukController() *PendudukController {
 func (r *PendudukController) Index(c *gin.Context) {
 	// Data to pass to the index.html template
 
-	var users []models.Adminstrator
+	var users []models.Administrator
 
 	// Retrieve all users from the database
 	err := database.DB.Find(&users).Error

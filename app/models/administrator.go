@@ -9,7 +9,7 @@ const (
 	Owner Level = "owner"
 )
 
-type Adminstrator struct {
+type Administrator struct {
 	ID        string    `gorm:"primary_key;not null;" json:"id,omitempty"`
 	Name      string    `gorm:"varchar(300);not null;" json:"name" binding:"required"`
 	Email     string    `gorm:"unique_index;not null;" binding:"required" json:"email"`

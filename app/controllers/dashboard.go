@@ -30,7 +30,7 @@ func (r *DashboardController) Index(c *gin.Context) {
 }
 
 func (r *DashboardController) User(c *gin.Context) {
-	var users []models.Adminstrator
+	var users []models.Administrator
 
 	// Retrieve all users from the database
 	err := database.DB.Find(&users).Error
