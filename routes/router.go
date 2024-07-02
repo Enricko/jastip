@@ -20,8 +20,22 @@ func SetupRouter(r *gin.Engine) {
 	r.POST("/login", authController.Login)
 	r.GET("/logout", authController.Logout)
 
-	
-	r.Use(middleware.AuthMiddleware())
+	//  API
+	apiRoutes := r.Group("/api")
+	{
+		apiAuthController := api.NewAuthController()
+
+		authRoutes := apiRoutes.Group("/auth")
+		{
+			authRoutes.POST("/register", apiAuthController.Register)
+			authRoutes.POST("/login", apiAuthController.Login)
+			authRoutes.POST("/logout", apiAuthController.Logout)
+			authRoutes.GET("/validate", apiAuthController.ValidateToken)
+		}
+	}
+
+	protectedRoutes := r.Group("/")
+    protectedRoutes.Use(middleware.AuthMiddleware())
 	{
 		r.GET("/dashboard", dashboardController.Index)
 
@@ -50,20 +64,5 @@ func SetupRouter(r *gin.Engine) {
 			}
 		}
 
-	}
-	
-
-	//  API
-	apiRoutes := r.Group("/api")
-	{
-		authController := api.NewAuthController()
-
-		authRoutes := apiRoutes.Group("/auth")
-		{
-			authRoutes.POST("/register", authController.Register)
-			authRoutes.POST("/login", authController.Login)
-			authRoutes.POST("/logout", authController.Logout)
-			authRoutes.GET("/validate", authController.ValidateToken)
-		}
 	}
 }
