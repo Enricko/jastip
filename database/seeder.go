@@ -29,6 +29,7 @@ func SeedAdminstrators() {
 			Level:     models.Owner,
 			Password:  hashPassword("admin"),
 		},
+		
 	}
 
 	for _, admin := range admins {

@@ -15,6 +15,7 @@ import (
 	csrf "github.com/utrack/gin-csrf"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
 )
 
 type UserController struct {
@@ -106,7 +107,7 @@ func (r *UserController) InsertData(c *gin.Context) {
 		Name                 string `form:"name" json:"name" binding:"required"`
 		Email                string `form:"email" json:"email" binding:"required,email"`
 		NoTelepon            string `form:"no_telepon" json:"no_telepon" binding:"required"`
-		Alamat               string `form:"alamat" json:"alamat" binding:"required"`
+		Alamat               string `form:"alamat" json:"alamat"`
 		Password             string `form:"password" json:"password" binding:"required,min=6"`
 		PasswordConfirmation string `form:"password_confirmation" json:"password_confirmation" binding:"required,min=6"`
 	}
