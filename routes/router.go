@@ -34,8 +34,8 @@ func SetupRouter(r *gin.Engine) {
 		}
 	}
 
-	protectedRoutes := r.Group("/")
-    protectedRoutes.Use(middleware.AuthMiddleware())
+	// protectedRoutes := r.Group("/")
+    r.Use(middleware.AuthMiddleware())
 	{
 		r.GET("/dashboard", dashboardController.Index)
 

@@ -1,16 +1,16 @@
 package main
 
 import (
+	"golang-app/app/middleware"
 	"golang-app/database"
 	"golang-app/routes"
-	"golang-app/app/middleware"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-
 )
 
 func main() {
@@ -22,6 +22,8 @@ func main() {
 	database.Init()
 
 	r := gin.Default()
+
+	r.Use(cors.Default())
 
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
