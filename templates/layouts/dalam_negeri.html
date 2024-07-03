@@ -1,0 +1,276 @@
+{{ template "header" . }}
+<main>
+    
+    
+    <!-- Main Content -->
+    <div class="container-fluid px-4 mt-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-dark rounded p-3">
+                <li class="breadcrumb-item active text-white" aria-current="page">Dashboard</li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Proses Dalam Negeri</li>
+            </ol>
+        </nav>
+        <div class="border rounded p-3">
+            <table id="dalamnegeri-table" class="display table-responsive table-bordered" style="width:100%">
+                <thead style="background-color: #212529; color: white;">
+                    <tr>
+                        <th>NO</th>
+                        <th>ID</th>
+                        <th>Nama Barang</th>
+                        <th>Total Harga</th>
+                        <th>No Resi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</main>
+{{ template "footer" . }}
+<script type="text/javascript">
+    var csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+    const itemTable = $('#dalamnegeri-table').DataTable({
+        ajax: '/user/data',
+        processing: true,
+        serverSide: true,
+        searching: true,
+        responsive: true,
+        columnDefs: [
+            { "orderable": true, "targets": 0 },
+            { "orderable": false, "targets": '_all' }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copy',
+                text: '<i class="fas fa-copy"></i>',
+                className: 'btn btn-secondary',
+                titleAttr: 'Copy'
+            },
+            {
+                extend: 'excel',
+                text: '<i class="fas fa-file-excel"></i>',
+                className: 'btn btn-success',
+                titleAttr: 'Export to Excel'
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="fas fa-file-pdf"></i>',
+                className: 'btn btn-danger',
+                titleAttr: 'Export to PDF'
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print"></i>',
+                className: 'btn btn-info',
+                titleAttr: 'Print'
+            }
+        ],
+        columns: [
+        { 
+                data: null,
+                className: 'text-center',
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
+            { data: 'id', className: 'text-center' },
+            { data: 'name', className: 'text-center' },
+            { data: 'email', className: 'text-center' },
+            { data: 'email', className: 'text-center' },
+        ]
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle form submissions
+        handleFormSubmit('formInsert', 'insert');
+        handleFormSubmit('formUpdate', 'update');
+    });
+
+    function handleFormSubmit(formId, action) {
+        if(action == "insert"){
+            document.getElementById('formInsert').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+            if (password !== passwordConfirmation) {
+                Swal.fire({
+                        title: "Error",
+                        text: 'Passwords do not match!',
+                        icon: "error"
+                    });
+                return;
+            }
+
+            var formData = new FormData(event.target);
+            fetch('/user/insert', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': formData.get('_csrf')
+                },
+                body: formData
+            }).then(response => {
+                return response.json().then(data => {
+                    return { status: response.status, body: data };
+                });
+            }).then(data => {
+                if (data.status < 300) {
+                    itemTable.ajax.reload();
+                    $('#insertModal').modal('hide');
+                    document.getElementById('formInsert').reset();
+                    Swal.fire({
+                        title: "Success",
+                        text: data.body.message,
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.body.message,
+                        icon: "error"
+                    });
+                }
+            }).catch(error => {
+                Swal.fire({
+                    title: "Something went wrong",
+                    text: error.message,
+                    icon: "error"
+                });
+            });
+        });
+        }
+        else if(action == "update"){
+            document.getElementById('formUpdate').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const password = document.getElementById('edit_password').value;
+            const passwordConfirmation = document.getElementById('edit_password_confirmation').value;
+
+            if (password !== passwordConfirmation) {
+                Swal.fire({
+                        title: "Error",
+                        text: 'Passwords do not match!',
+                        icon: "error"
+                    });
+                return;
+            }
+
+            var formData = new FormData(event.target);
+            var id = document.getElementById('edit_id').value;
+            fetch(`/user/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-Token': formData.get('_csrf')
+                },
+                body: formData
+            }).then(response => {
+                return response.json().then(data => {
+                    return { status: response.status, body: data };
+                });
+            }).then(data => {
+                if (data.status < 300) {
+                    itemTable.ajax.reload();
+                    $('#updateModal').modal('hide');
+                    document.getElementById('formUpdate').reset();
+                    Swal.fire({
+                        title: "Success",
+                        text: data.body.message,
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.body.message,
+                        icon: "error"
+                    });
+                }
+            }).catch(error => {
+                Swal.fire({
+                    title: "Something went wrong",
+                    text: error.message,
+                    icon: "error"
+                });
+            });
+        });
+        }
+    }
+
+    function updateForm(id) {
+        fetch(`/user/getData/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.data) {
+                    let user = data.data;
+                    document.getElementById('edit_id').value = user.id;
+                    document.getElementById('edit_name').value = user.name;
+                    document.getElementById('edit_email').value = user.email;
+                    document.getElementById('edit_no_telepon').value = user.no_telepon;
+                    document.getElementById('edit_alamat').value = user.alamat;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function deleteData(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/user/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-Token': csrfToken
+                    }
+                }).then(response => {
+                    return response.json().then(data => {
+                        return { status: response.status, body: data };
+                    });
+                }).then(data => {
+                    if (data.status < 300) {
+                        itemTable.ajax.reload();
+                        swalWithBootstrapButtons.fire({
+                            title: "Deleted!",
+                            text: data.body.message,
+                            icon: "success"
+                        });
+                    } else {
+                        swalWithBootstrapButtons.fire({
+                            title: "Deleted Failed!",
+                            text: data.body.message,
+                            icon: "error"
+                        });
+                    }
+                    
+                }).catch(error => {
+                    console.log(error);
+                    // var statusMessageDiv = document.getElementById('statusMessage');
+                    // statusMessageDiv.innerText = `Error: ${error}`;
+                });
+                
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Your imaginary file is safe :)",
+                    icon: "error"
+                });
+            }
+        });
+    }
+</script>
