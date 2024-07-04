@@ -1,0 +1,421 @@
+{{ template "header" . }}
+<main>
+    <!-- Modal tambah User -->
+    <!-- Modal -->
+    <div class="modal fade" id="insertModal" role="dialog" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="insertModalLabel">Insert User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formInsert">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="Email" name="email" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Phone" class="form-label">Phone</label>
+                            <input type="tel" maxlength="13" class="form-control" id="Phone" name="no_telepon" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Level" class="form-label">Level</label>
+                            <select class="form-select" id="Level" name="level" required autocomplete="off">
+                                <option value="admin">Admin</option>
+                                <option value="owner">Owner</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="Password" name="password" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="PasswordConfirmation" class="form-label">Password Confirmation</label>
+                            <input type="password" class="form-control" id="PasswordConfirmation" name="password_confirmation" required
+                                autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="buttonInsert" type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal tambah User -->
+
+    <!-- Modal Edit User -->
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" role="dialog" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateModalLabel">Edit User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formUpdate">
+                        <input type="hidden" name="_csrf" value="{{ .csrfToken }}">
+                        <input type="hidden" name="id" id="edit_id">
+                        <div class="mb-3">
+                            <label for="edit_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="edit_name" name="name" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="edit_email" name="email" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_phone" class="form-label">Phone</label>
+                            <input type="tel" maxlength="13" class="form-control" id="edit_phone" name="no_telepon" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_level" class="form-label">Level</label>
+                            <input type="text" class="form-control" id="edit_level" name="level" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="edit_password" name="password" required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_password_confirmation" class="form-label">Password Confirmation</label>
+                            <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation" required
+                                autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="buttonUpdate" type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Edit User -->
+
+    <div class="container-fluid px-4 mt-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-dark rounded p-3">
+                <li class="breadcrumb-item active text-white" aria-current="page">Dashboard</li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Produk Rekomendasi</li>
+            </ol>
+        </nav>
+
+        <div class="border rounded p-3">
+            <button class="btn btn-primary" id="tambah_data" style="float: right;" data-bs-toggle="modal" data-bs-target="#insertModal">
+                <i class="fas fa-plus"></i>
+            </button>
+
+            <table id="user-table" class="display table-responsive table-bordered" style="width:100%">
+                <thead style="background-color: #212529; color: white;">
+                    <tr>
+                        <th>NO</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Gambar</th>
+                        <th>Merk</th>
+                        <th>Harga</th>
+                        <th>Url</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <!-- Table content generated by DataTables -->
+            </table>
+        </div>
+    </div>
+</main>
+<!-- Footer -->
+{{ template "footer" . }}
+<!-- Footer -->
+
+<script type="text/javascript">
+    var csrfToken = document.querySelector('input[name="_csrf"]').value;
+
+
+    const itemTable = $('#user-table').DataTable({
+    ajax: '/user-admin/data',
+    processing: true,
+    serverSide: true,
+    searching: true, // Enable search feature
+    responsive: true,
+    columnDefs: [
+        { "orderable": true, "targets": 0 },  // Enable sorting on the first column (NO)
+        { "orderable": false, "targets": '_all' }  // Disable sorting on all other columns
+    ],
+    dom: 'Bfrtip', // Include buttons with default layout
+    buttons: [
+        {
+            extend: 'copy',
+            text: '<i class="fas fa-copy"></i>',
+            className: 'btn btn-secondary',
+            titleAttr: 'Copy'
+        },
+        {
+            extend: 'excel',
+            text: '<i class="fas fa-file-excel"></i>',
+            className: 'btn btn-success',
+            titleAttr: 'Export to Excel'
+        },
+        {
+            extend: 'pdf',
+            text: '<i class="fas fa-file-pdf"></i>',
+            className: 'btn btn-danger',
+            titleAttr: 'Export to PDF'
+        },
+        {
+            extend: 'print',
+            text: '<i class="fas fa-print"></i>',
+            className: 'btn btn-info',
+            titleAttr: 'Print'
+        }
+    ],
+    columns: [
+        {
+            data: null,
+            className: 'text-center',
+            render: function (data, type, row, meta) {
+                // Render index column starting from 1
+                return meta.row + 1;
+            }
+        },
+        { data: 'id', className: 'text-center' },
+        { data: 'name', className: 'text-center' },
+        { data: 'email', className: 'text-center' },
+        { data: 'no_telepon', className: 'text-center' },
+        { data: 'level', className: 'text-center' },
+        { data: 'level', className: 'text-center' },
+        {
+            data: 'aksi',
+            className: 'text-center',
+            width: '10%',
+            render: function (data, type, row, meta) {
+                return `
+                    <div class="row">
+                        <div class="col-auto mb-1">
+                            <button class="btn btn-warning btn-xs" id="edit_data" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="updateForm('${row.id}')"><i class="fas fa-pencil"></i></button>
+                        </div>
+                        <div class="col-auto mb-1">
+                            <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>`;
+            }
+        },
+    ],
+});
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+        document.getElementById('formInsert').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const password = document.getElementById('Password').value;
+            const passwordConfirmation = document.getElementById('PasswordConfirmation').value;
+
+            if (password !== passwordConfirmation) {
+                Swal.fire({
+                    title: "Error",
+                    text: 'Passwords do not match!',
+                    icon: "error"
+                });
+                return;
+            }
+
+            var formData = new FormData(event.target);
+            fetch('/user-admin/insert', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': formData.get('_csrf')
+                },
+                body: formData
+            }).then(response => {
+                return response.json().then(data => {
+                    return { status: response.status, body: data };
+                });
+            }).then(data => {
+                if (data.status < 300) {
+                    itemTable.ajax.reload();
+                    $('#insertModal').modal('hide');
+                    document.getElementById('formInsert').reset();
+                    Swal.fire({
+                        title: "Success",
+                        text: data.body.message,
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.body.message,
+                        icon: "error"
+                    });
+                }
+            }).catch(error => {
+                Swal.fire({
+                    title: "Something went wrong",
+                    text: error.message,
+                    icon: "error"
+                });
+            });
+        });
+
+        document.getElementById('formUpdate').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const password = document.getElementById('edit_password').value;
+            const passwordConfirmation = document.getElementById('edit_password_confirmation').value;
+
+            if (password !== passwordConfirmation) {
+                Swal.fire({
+                    title: "Error",
+                    text: 'Passwords do not match!',
+                    icon: "error"
+                });
+                return;
+            }
+
+            var formData = new FormData(event.target);
+            var id = document.getElementById('edit_id').value;
+            fetch(`/user-admin/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-Token': formData.get('_csrf')
+                },
+                body: formData
+            }).then(response => {
+                return response.json().then(data => {
+                    return { status: response.status, body: data };
+                });
+            }).then(data => {
+                if (data.status < 300) {
+                    itemTable.ajax.reload();
+                    $('#updateModal').modal('hide');
+                    document.getElementById('formUpdate').reset();
+                    Swal.fire({
+                        title: "Success",
+                        text: data.body.message,
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.body.message,
+                        icon: "error"
+                    });
+                }
+            }).catch(error => {
+                Swal.fire({
+                    title: "Something went wrong",
+                    text: error.message,
+                    icon: "error"
+                });
+            });
+        });
+
+        // Reload the table data every 60 seconds
+        setInterval(() => {
+            itemTable.ajax.reload(null, false); // false to keep the current page
+        }, 60000); // 60 seconds
+
+    });
+
+    function updateForm(id) {
+        fetch(`/user-admin/getData/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            return response.json().then(data => {
+                return { status: response.status, body: data };
+            });
+        }).then(data => {
+            if (data.status < 300) {
+                document.getElementById('edit_id').value = data.body.data.id;
+                document.getElementById('edit_email').value = data.body.data.email;
+                document.getElementById('edit_name').value = data.body.data.name;
+                document.getElementById('edit_phone').value = data.body.data.no_telepon;
+                document.getElementById('edit_level').value = data.body.data.level;
+            } else {
+                $('#updateModal').modal('hide');
+                Swal.fire({
+                    title: "Error",
+                    text: data.body.message,
+                    icon: "error"
+                });
+            }
+        }).catch(error => {
+            $('#updateModal').modal('hide');
+            Swal.fire({
+                title: "Something went wrong",
+                text: error.message,
+                icon: "error"
+            });
+        });
+    }
+
+    function deleteData(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/user-admin/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    }
+                }).then(response => {
+                    return response.json().then(data => {
+                        return { status: response.status, body: data };
+                    });
+                }).then(data => {
+                    if (data.status < 300) {
+                        itemTable.ajax.reload();
+                        swalWithBootstrapButtons.fire({
+                            title: "Deleted!",
+                            text: data.body.message,
+                            icon: "success"
+                        });
+                    } else {
+                        swalWithBootstrapButtons.fire({
+                            title: "Deleted Failed!",
+                            text: data.body.message,
+                            icon: "error"
+                        });
+                    }
+                }).catch(error => {
+                    console.log(error);
+                    // var statusMessageDiv = document.getElementById('statusMessage');
+                    // statusMessageDiv.innerText = `Error: ${error}`;
+                });
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Your data is safe :)",
+                    icon: "error"
+                });
+            }
+        });
+    }
+</script>
