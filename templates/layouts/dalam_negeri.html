@@ -11,13 +11,16 @@
             </ol>
         </nav>
         <div class="border rounded p-3">
-            <table id="dalamnegeri-table" class="display table-responsive table-bordered" style="width:100%">
+            <table id="dalam-negeri-table" class="display table-responsive table-bordered" style="width:100%">
                 <thead style="background-color: #212529; color: white;">
                     <tr>
                         <th>NO</th>
                         <th>ID</th>
                         <th>Nama Barang</th>
-                        <th>Total Harga</th>
+                        <th>Harga Barang</th>
+                        <th>Ongkir</th>
+                        <th>Jasa</th>
+                        <th>Total</th>
                         <th>No Resi</th>
                     </tr>
                 </thead>
@@ -27,10 +30,10 @@
 </main>
 {{ template "footer" . }}
 <script type="text/javascript">
-    var csrfToken = document.querySelector('input[name="_csrf"]').value;
 
-    const itemTable = $('#dalamnegeri-table').DataTable({
-        ajax: '/user/data',
+
+    const itemTable = $('#dalam-negeri-table').DataTable({
+        ajax: '/proses-dalam-negeri/data',
         processing: true,
         serverSide: true,
         searching: true,
@@ -46,7 +49,6 @@
                 text: '<i class="fas fa-copy"></i>',
                 className: 'btn btn-secondary',
                 titleAttr: 'Copy',
-                footer:true
             },
             {
                 extend: 'excel',
@@ -68,17 +70,50 @@
             }
         ],
         columns: [
-        { 
-                data: null,
-                className: 'text-center',
-                render: function(data, type, row, meta) {
-                    return meta.row + 1;
-                }
-            },
-            { data: "id", className: "text-center", width: "10%" },
-            { data: 'name', className: 'text-center' },
-            { data: 'email', className: 'text-center' },
-            { data: 'email', className: 'text-center' },
+            {
+        data: null,
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return meta.row + 1;
+        },
+      },
+      { data: "id", className: "text-center", width: "10%" },
+      { data: "barang.nama_barang", className: "text-center" },
+      {
+        data: "barang.harga_barang",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `Rp. ${row.barang.harga_barang}`;
+        },
+      },
+      {
+        data: "harga_ongkir",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `Rp. ${row.harga_ongkir}`;
+        },
+      },
+      {
+        data: "harga_jasa",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `Rp. ${row.harga_jasa}`;
+        },
+      },
+      {
+        data: "null",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `Rp. ${row.harga_jasa + row.harga_ongkir + row.barang.harga_barang}`;
+        },
+      },
+      {
+        data: "no_resi",
+        className: "text-center",
+        render: function (data, type, row, meta) {
+          return `Rp. ${row.harga_jasa + row.harga_ongkir + row.barang.harga_barang}`;
+        },
+      },
         ]
     });
 

@@ -6,6 +6,7 @@ import (
 	"golang-app/app/middleware"
 
 	"github.com/gin-gonic/gin"
+
 )
 
 func SetupRouter(r *gin.Engine) {
@@ -16,7 +17,7 @@ func SetupRouter(r *gin.Engine) {
 	authController := controllers.NewAuthController()
 
 	orderController := controllers.NewOrderController()
-	belumbayarController := controllers.NewBelumBayarController()
+	confirmedOrderController := controllers.NewConfirmedOrderController()
 	lunasController := controllers.NewLunasController()
 	luarnegeriController := controllers.NewLuarNegeriController()
 	dalamnegeriController := controllers.NewDalamNegeriController()
@@ -83,37 +84,44 @@ func SetupRouter(r *gin.Engine) {
 			{
 				orderRoutes.GET("/", orderController.Index)
 				orderRoutes.GET("/data", orderController.GetOrders)
+				orderRoutes.GET("/getData/:id", orderController.GetOrder)
 				orderRoutes.PUT("/confirm/:id", orderController.ConfirmOrder)
 				orderRoutes.PUT("/decline/:id", orderController.DeclineOrder)
 			}
-			belumbayarRoutes := r.Group("/belum-bayar")
+			confirmedOrderRoutes := r.Group("/confirmed-order")
 			{
-				belumbayarRoutes.GET("/", belumbayarController.Index)
+				confirmedOrderRoutes.GET("/", confirmedOrderController.Index)
+				confirmedOrderRoutes.GET("/data", confirmedOrderController.GetConfiredOrders)
 				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			lunasRoutes := r.Group("/lunas")
 			{
 				lunasRoutes.GET("/", lunasController.Index)
+				lunasRoutes.GET("/data", lunasController.GetLunas)
 				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			luarnegeriRoutes := r.Group("/proses-luar-negeri")
 			{
 				luarnegeriRoutes.GET("/", luarnegeriController.Index)
+				luarnegeriRoutes.GET("/data", luarnegeriController.GetLuarNegeri)
 				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			dalamnegeriRoutes := r.Group("/proses-dalam-negeri")
 			{
 				dalamnegeriRoutes.GET("/", dalamnegeriController.Index)
+				dalamnegeriRoutes.GET("/data", dalamnegeriController.GetDalamNegeri)
 				// baruRoutes.GET("/data", baruController.GetAdminUsers)
 			}
 			selesaiRoutes := r.Group("/selesai")
 			{
 				selesaiRoutes.GET("/", selesaiController.Index)
+				selesaiRoutes.GET("/data", selesaiController.GetSelesai)
 				// baruRoutes.GET("/data", baruController.GetAdminUsers)
 			}
 			produkrekomendasiRoutes := r.Group("/produk-rekomendasi")
 			{
 				produkrekomendasiRoutes.GET("/", produkrekomendasiController.Index)
+				produkrekomendasiRoutes.GET("/data", produkrekomendasiController.GetProductRecommends)
 				// baruRoutes.GET("/data", baruController.GetAdminUsers)
 			}
 

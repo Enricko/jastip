@@ -9,6 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // MYSQL
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+
 )
 
 var DB *gorm.DB
@@ -36,12 +37,18 @@ func Init() {
 		panic(errDb.Error())
 	}
 
-	err := DB.AutoMigrate(&models.Administrator{}, &models.User{}, &models.Order{}).Error
+	err := DB.AutoMigrate(&models.Administrator{}, &models.User{}, &models.Barang{}, &models.Order{},&models.ProcessOrder{},&models.RecommendProduct{}).Error
 	if err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
 
-	if err := DB.Model(&models.Order{}).AddForeignKey("id_user", "users(id)", "CASCADE", "CASCADE").Error; err != nil {
+	if err := DB.Model(&models.Order{}).AddForeignKey("id_barang", "barangs(id)", "CASCADE", "CASCADE").AddForeignKey("id_user", "users(id)", "CASCADE", "CASCADE").Error; err != nil {
+		log.Fatal("Failed to set up foreign key:", err)
+	}
+	if err := DB.Model(&models.ProcessOrder{}).AddForeignKey("id_barang", "barangs(id)", "CASCADE", "CASCADE").AddForeignKey("id_user", "users(id)", "CASCADE", "CASCADE").Error; err != nil {
+		log.Fatal("Failed to set up foreign key:", err)
+	}
+	if err := DB.Model(&models.RecommendProduct{}).AddForeignKey("id_barang", "barangs(id)", "CASCADE", "CASCADE").Error; err != nil {
 		log.Fatal("Failed to set up foreign key:", err)
 	}
 

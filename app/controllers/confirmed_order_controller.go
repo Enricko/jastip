@@ -12,28 +12,27 @@ import (
 
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
-
 )
 
-type ProdukRekomendasiController struct {
+type ConfirmedOrderController struct {
 }
 
-func NewProdukRekomendasiController() *ProdukRekomendasiController {
-	return &ProdukRekomendasiController{}
+func NewConfirmedOrderController() *ConfirmedOrderController {
+	return &ConfirmedOrderController{}
 }
 
-func (r *ProdukRekomendasiController) Index(c *gin.Context) {
+func (r *ConfirmedOrderController) Index(c *gin.Context) {
 	data := gin.H{
-		"title":     "Admin User Management",
+		"title":     "Confirmed Order Management",
 		"csrfToken": csrf.GetToken(c),
 	}
-	c.HTML(http.StatusOK, "produk_rekomendasi.html", data)
+	c.HTML(http.StatusOK, "confirmed_order.html", data)
 }
 
-func (r *ProdukRekomendasiController) GetProductRecommends(c *gin.Context) {
-	var data []models.RecommendProduct
+func (r *ConfirmedOrderController) GetConfiredOrders(c *gin.Context) {
+	var data []models.ProcessOrder
 
-	result := database.DB.Preload("Barang").Find(&data)
+	result := database.DB.Preload("User").Preload("Barang").Where("status = ?", "belum bayar").Find(&data)
 	if result.Error != nil {
 		// Log or handle the error
 		fmt.Println("Error loading associated user data:", result.Error)
@@ -47,7 +46,7 @@ func (r *ProdukRekomendasiController) GetProductRecommends(c *gin.Context) {
 	length, _ := strconv.Atoi(c.Query("length"))
 	search := c.Query("search[value]")
 
-	filteredData := make([]models.RecommendProduct, 0)
+	filteredData := make([]models.ProcessOrder, 0)
 	for _, order := range data {
 		v := reflect.ValueOf(order)
 		for i := 0; i < v.NumField(); i++ {

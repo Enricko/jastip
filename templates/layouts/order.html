@@ -3,15 +3,15 @@
     <!-- Modal for Editing User -->
     <div
         class="modal fade"
-        id="updateModal"
+        id="confirmModal"
         role="dialog"
         tabindex="-1"
-        aria-labelledby="updateModalLabel"
+        aria-labelledby="confirmModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="updateModalLabel">Konfirmasi</h1>
+                    <h1 class="modal-title fs-5" id="confirmModalLabel">Konfirmasi</h1>
                     <button
                         type="button"
                         class="btn-close"
@@ -19,52 +19,40 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formUpdate">
+                    <form id="formConfirm">
                         <input type="hidden" name="_csrf" value="{{ .csrfToken }}" />
-                        <input type="hidden" name="id" id="edit_id" />
-                        <div class="mb-3">
-                            <label for="confirm_name" class="form-label">Nama Barang</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="confirm_name"
-                                name="name"
-                                required
-                                autocomplete="off" />
+                        <img src id="confirm_image" alt="gambar" style="width: 200px;">
+                        <div class="row">
+                            <div class="col-3">
+                                <p>
+                                    <strong>Nama User</strong> <br>
+                                    <strong>Nama</strong> <br>
+                                    <strong>URL</strong> <br>
+                                    <strong>Alamat</strong> <br>
+                                    <strong>No Telepon</strong> <br>
+                                </p>
+                            </div>
+                            <div class="col-1">
+                                <p>
+                                    : <br>
+                                    : <br>
+                                    : <br>
+                                    : <br>
+                                    : <br>
+                                </p>
+                            </div>
+                            <div class="col-7">
+                                <p>
+                                    <span id="confirm_nama_user"></span> <br>
+                                    <span id="confirm_nama_barang"></span> <br>
+                                    <span id="confirm_url"></span> <br>
+                                    <span id="confirm_alamat"></span> <br>
+                                    <span id="confirm_no_telepon"></span> <br>
+                                </p>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="confirm_url" class="form-label">Url</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="confirm_url"
-                                name="url"
-                                required
-                                autocomplete="off" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_no_telepon" class="form-label">Gambar</label>
-                            <input
-                                type="tel"
-                                maxlength="13"
-                                class="form-control"
-                                id="edit_no_telepon"
-                                name="no_telepon"
-                                required
-                                autocomplete="off" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="confirm_alamat" class="form-label">Address</label>
-                            <textarea
-                                class="form-control"
-                                id="confirm_alamat"
-                                name="alamat"
-                                rows="3"
-                                required
-                                autocomplete="off"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="confirm_harga" class="form-label">Harga Barang (dalam yen)</label>
+                            <label for="confirm_harga" class="form-label">Harga Barang (dalam Rupiah)</label>
                             <input
                                 type="text"
                                 class="form-control"
@@ -123,7 +111,7 @@
                         <th>Nama Barang</th>
                         <th>URL</th>
                         <th>Alamat</th>
-                        <th>Status</th>
+                        <!-- <th>Status</th> -->
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -190,16 +178,16 @@
       { data: "id", className: "text-center", width: "10%"},
       { data: "user.name", className: "text-center" },
       {
-          data: "gambar",
+          data: "barang.gambar",
           className: "text-center",
           render: function (data, type, row, meta) {
           return `
             <img src="/${data}" width="200px">`;
         },
       },
-    { data: "nama_barang", className: "text-center" },
+    { data: "barang.nama_barang", className: "text-center" },
       {
-        data: "url",
+        data: "barang.url",
         className: "text-center",
         render: function (data, type, row, meta) {
           return `
@@ -209,27 +197,29 @@
         },
       },
       { data: "alamat", className: "text-center" },
-      { data: "status", className: "text-center",
-        render: function (data, type, row, meta) {
-          return `<div class="p-2 ${data == "terima" ? "bg-success" : "bg-danger"} text-white rounded-3">
-            ${data} 
-            </div>`;
-        },
-       },
+    //   { data: "status", className: "text-center",
+    //     render: function (data, type, row, meta) {
+    //       return `<div class="p-2 ${data == "terima" ? "bg-success" : "bg-danger"} text-white rounded-3">
+    //         ${toTitles(data)} 
+    //         </div>`;
+    //     },
+    //    },
       {
         data: "aksi",
         className: "text-center",
         width: "10%",
         render: function (data, type, row, meta) {
           return `
-                    <div class="row">
-                        <div class="col-auto mb-1">
-                            <button class="btn btn-success btn-xs" onclick="ConfirmData('${row.id}')">Konfirmasi</button>
-                        </div>
-                        <div class="col-auto mb-1">
-                            <button class="btn btn-danger btn-xs" onclick="DeclineData('${row.id}')">Tolak</button>
-                        </div>
-                    </div>`;
+            <div class="row">
+                <div class="col-auto mb-1">
+                    <div class="col-auto mb-1">
+                        <button class="btn btn-success btn-xs" id="edit_data" data-bs-toggle="modal" data-bs-target="#confirmModal" onclick="confirmForm('${row.id}')">Konfirmasi</button>
+                    </div>
+                </div>
+                <div class="col-auto mb-1">
+                    <button class="btn btn-danger btn-xs" onclick="DeclineData('${row.id}')">Tolak</button>
+                </div>
+            </div>`;
         },
       },
     ],
@@ -238,72 +228,13 @@
   document.addEventListener("DOMContentLoaded", function () {
     // Handle form submissions
     handleFormSubmit("formInsert", "insert");
-    handleFormSubmit("formUpdate", "update");
+    handleFormSubmit("formConfirm", "update");
   });
 
   function handleFormSubmit(formId, action) {
-    if (action == "insert") {
+    if (action == "confirm") {
       document
-        .getElementById("formInsert")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          const password = document.getElementById("password").value;
-          const passwordConfirmation = document.getElementById(
-            "password_confirmation"
-          ).value;
-
-          if (password !== passwordConfirmation) {
-            Swal.fire({
-              title: "Error",
-              text: "Passwords do not match!",
-              icon: "error",
-            });
-            return;
-          }
-
-          var formData = new FormData(event.target);
-          fetch("/user/insert", {
-            method: "POST",
-            headers: {
-              "X-CSRF-Token": formData.get("_csrf"),
-            },
-            body: formData,
-          })
-            .then((response) => {
-              return response.json().then((data) => {
-                return { status: response.status, body: data };
-              });
-            })
-            .then((data) => {
-              if (data.status < 300) {
-                itemTable.ajax.reload();
-                $("#insertModal").modal("hide");
-                document.getElementById("formInsert").reset();
-                Swal.fire({
-                  title: "Success",
-                  text: data.body.message,
-                  icon: "success",
-                });
-              } else {
-                Swal.fire({
-                  title: "Error",
-                  text: data.body.message,
-                  icon: "error",
-                });
-              }
-            })
-            .catch((error) => {
-              Swal.fire({
-                title: "Something went wrong",
-                text: error.message,
-                icon: "error",
-              });
-            });
-        });
-    } else if (action == "update") {
-      document
-        .getElementById("formUpdate")
+        .getElementById("formConfirm")
         .addEventListener("submit", function (event) {
           event.preventDefault();
           const password = document.getElementById("edit_password").value;
@@ -337,8 +268,8 @@
             .then((data) => {
               if (data.status < 300) {
                 itemTable.ajax.reload();
-                $("#updateModal").modal("hide");
-                document.getElementById("formUpdate").reset();
+                $("#confirmModal").modal("hide");
+                document.getElementById("formConfirm").reset();
                 Swal.fire({
                   title: "Success",
                   text: data.body.message,
@@ -363,23 +294,26 @@
     }
   }
 
-  function updateForm(id) {
-    fetch(`/user/getData/${id}`)
+  function confirmForm(id) {
+    fetch(`/order/getData/${id}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.data) {
-          let user = data.data;
-          document.getElementById("edit_id").value = user.id;
-          document.getElementById("edit_name").value = user.name;
-          document.getElementById("edit_email").value = user.email;
-          document.getElementById("edit_no_telepon").value = user.no_telepon;
-          document.getElementById("edit_alamat").value = user.alamat;
+            data = data.data;
+          console.log(data);
+    
+          document.getElementById("confirm_image").src = "/"+data.gambar;
+          document.getElementById("confirm_nama_user").innerHTML = data.user.name;
+          document.getElementById("confirm_nama_barang").innerHTML = data.nama_barang;
+          document.getElementById("confirm_url").innerHTML = data.url;
+          document.getElementById("confirm_alamat").innerHTML = data.alamat;
+          document.getElementById("confirm_no_telepon").innerHTML = data.user.no_telepon;
         }
       })
       .catch((error) => console.error("Error:", error));
   }
 
-  function ConfirmData(id) {
+  function ConfirmDataAction(id) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
