@@ -7,7 +7,7 @@ type User struct {
 	Name      string    `gorm:"varchar(300);not null;" json:"name" binding:"required"`
 	Email     string    `gorm:"unique_index;not null;" binding:"required" json:"email"`
 	NoTelepon string    `gorm:"varchar(300);not null;" json:"no_telepon" binding:"required"`
-	Alamat    string    `gorm:"varchar(300);" json:"alamat"`
+	Alamat    string    `gorm:"TEXT;" json:"alamat"`
 	Password  string    `gorm:"varchar(300);not null;" json:"-" binding:"required,min=6"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

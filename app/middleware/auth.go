@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"net/http"
+	// "strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+
 )
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -39,6 +41,39 @@ func AuthMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// func ApiAuthMiddleware() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		authHeader := c.GetHeader("Authorization")
+// 		if authHeader == "" {
+// 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Authorization header required"})
+// 			c.Abort()
+// 			return
+// 		}
+
+// 		// tokenString := strings.Split(authHeader, "Bearer ")[1]
+// 		token, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
+// 			return []byte("secret"), nil
+// 		})
+
+// 		if err != nil {
+// 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
+// 			c.Abort()
+// 			return
+// 		}
+
+// 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+// 			userID := claims["id"].(string)
+// 			c.Set("userID", userID)
+// 		} else {
+// 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid token claims"})
+// 			c.Abort()
+// 			return
+// 		}
+
+// 		c.Next()
+// 	}
+// }
 
 func RoleMiddleware(role string) gin.HandlerFunc {
 	return func(c *gin.Context) {

@@ -15,7 +15,7 @@ func SetupRouter(r *gin.Engine) {
 	userController := controllers.NewUserController()
 	authController := controllers.NewAuthController()
 
-	baruController := controllers.NewBaruController()
+	orderController := controllers.NewOrderController()
 	belumbayarController := controllers.NewBelumBayarController()
 	lunasController := controllers.NewLunasController()
 	luarnegeriController := controllers.NewLuarNegeriController()
@@ -38,6 +38,16 @@ func SetupRouter(r *gin.Engine) {
 			authRoutes.POST("/login", apiAuthController.Login)
 			authRoutes.POST("/logout", apiAuthController.Logout)
 			authRoutes.GET("/validate", apiAuthController.ValidateToken)
+
+			// Order
+
+		}
+		orderRoutes := apiRoutes.Group("/order")
+		{
+			// orderRoutes.Use(middleware.ApiAuthMiddleware())
+			orderRoutes.POST("/place-order", orderController.CreateOrder)
+			orderRoutes.PUT("/update-order/:id", orderController.UpdateOrder)
+			orderRoutes.DELETE("/place-order/:id", orderController.DeleteOrder)
 		}
 	}
 
@@ -69,25 +79,27 @@ func SetupRouter(r *gin.Engine) {
 				userRoutes.GET("/getData/:id", userController.GetUser)
 				userRoutes.PUT("/update/:id", userController.UpdateData)
 			}
-			baruRoutes := r.Group("/baru")
+			orderRoutes := r.Group("/order")
 			{
-				baruRoutes.GET("/", baruController.Index)
-				// baruRoutes.GET("/data", baruController.GetAdminUsers)
+				orderRoutes.GET("/", orderController.Index)
+				orderRoutes.GET("/data", orderController.GetOrders)
+				orderRoutes.PUT("/confirm/:id", orderController.ConfirmOrder)
+				orderRoutes.PUT("/decline/:id", orderController.DeclineOrder)
 			}
 			belumbayarRoutes := r.Group("/belum-bayar")
 			{
 				belumbayarRoutes.GET("/", belumbayarController.Index)
-				// baruRoutes.GET("/data", baruController.GetAdminUsers)
+				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			lunasRoutes := r.Group("/lunas")
 			{
 				lunasRoutes.GET("/", lunasController.Index)
-				// baruRoutes.GET("/data", baruController.GetAdminUsers)
+				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			luarnegeriRoutes := r.Group("/proses-luar-negeri")
 			{
 				luarnegeriRoutes.GET("/", luarnegeriController.Index)
-				// baruRoutes.GET("/data", baruController.GetAdminUsers)
+				// baruRoutes.GET("/data", orderController.GetAdminUsers)
 			}
 			dalamnegeriRoutes := r.Group("/proses-dalam-negeri")
 			{

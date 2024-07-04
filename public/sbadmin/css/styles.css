@@ -11256,4 +11256,21 @@ body {
   }
 
 
+/* Move the search input to the right */
+.dataTables_filter {
+    float: right !important;
+    text-align: right !important;
+}
 
+/* Optionally, adjust the top div to ensure proper alignment */
+.dataTables_wrapper .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Optional styling for buttons if needed */
+.dataTables_wrapper .dt-buttons {
+    margin-right: 10px;
+}

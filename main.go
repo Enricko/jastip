@@ -11,6 +11,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
 )
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 	r.Use(sessions.Sessions("mysession", store))
 
 	excludedPaths := []string{
-		"/api/auth",
+		"/api",
 		// Add more paths as needed
 	}
 
@@ -41,7 +42,7 @@ func main() {
 
 	r.Static("/public", "./public")
 
-	r.Run("0.0.0.0:8080")
+	r.Run("127.0.0.1:8080")
 
 	defer database.DB.Close()
 }

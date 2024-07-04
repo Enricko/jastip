@@ -80,17 +80,18 @@
         serverSide: true,
         searching: true,
         responsive: true,
-        columnDefs: [
-            { "orderable": true, "targets": 0 },
-            { "orderable": false, "targets": '_all' }
+        lengthMenu: [
+            [10, 25, 50, 100, 200],
+            [10, 25, 50, 100, 200]
         ],
-        dom: 'Bfrtip',
+        dom: 'Blftip',
         buttons: [
             {
                 extend: 'copy',
                 text: '<i class="fas fa-copy"></i>',
                 className: 'btn btn-secondary',
-                titleAttr: 'Copy'
+                titleAttr: 'Copy',
+                footer:true
             },
             {
                 extend: 'excel',
@@ -119,7 +120,7 @@
                     return meta.row + 1;
                 }
             },
-            { data: 'id', className: 'text-center' },
+            { data: "id", className: "text-center", width: "10%" },
             { data: 'name', className: 'text-center' },
             { data: 'email', className: 'text-center' },
             { data: 'alamat', className: 'text-center' },

@@ -184,7 +184,7 @@
                 return meta.row + 1;
             }
         },
-        { data: 'id', className: 'text-center' },
+        { data: "id", className: "text-center", width: "10%" },
         { data: 'name', className: 'text-center' },
         { data: 'email', className: 'text-center' },
         { data: 'no_telepon', className: 'text-center' },
@@ -199,10 +199,11 @@
                         <div class="col-auto mb-1">
                             <button class="btn btn-warning btn-xs" id="edit_data" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="updateForm('${row.id}')"><i class="fas fa-pencil"></i></button>
                         </div>
-                        <div class="col-auto mb-1">
-                            <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>`;
+                        </div>`;
+                        // Masukkan String kalau mau pakai <- di hapus
+                        // <div class="col-auto mb-1">
+                        //     <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
+                        // </div>
             }
         },
     ],
@@ -357,63 +358,63 @@
         });
     }
 
-    function deleteData(id) {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-        });
-        swalWithBootstrapButtons.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/user-admin/delete/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': csrfToken
-                    }
-                }).then(response => {
-                    return response.json().then(data => {
-                        return { status: response.status, body: data };
-                    });
-                }).then(data => {
-                    if (data.status < 300) {
-                        itemTable.ajax.reload();
-                        swalWithBootstrapButtons.fire({
-                            title: "Deleted!",
-                            text: data.body.message,
-                            icon: "success"
-                        });
-                    } else {
-                        swalWithBootstrapButtons.fire({
-                            title: "Deleted Failed!",
-                            text: data.body.message,
-                            icon: "error"
-                        });
-                    }
-                }).catch(error => {
-                    console.log(error);
-                    // var statusMessageDiv = document.getElementById('statusMessage');
-                    // statusMessageDiv.innerText = `Error: ${error}`;
-                });
-            } else if (
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire({
-                    title: "Cancelled",
-                    text: "Your data is safe :)",
-                    icon: "error"
-                });
-            }
-        });
-    }
+    // function deleteData(id) {
+    //     const swalWithBootstrapButtons = Swal.mixin({
+    //         customClass: {
+    //             confirmButton: "btn btn-success",
+    //             cancelButton: "btn btn-danger"
+    //         },
+    //         buttonsStyling: false
+    //     });
+    //     swalWithBootstrapButtons.fire({
+    //         title: "Are you sure?",
+    //         text: "You won't be able to revert this!",
+    //         icon: "warning",
+    //         showCancelButton: true,
+    //         confirmButtonText: "Yes, delete it!",
+    //         cancelButtonText: "No, cancel!",
+    //         reverseButtons: true
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             fetch(`/user-admin/delete/${id}`, {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     'X-CSRF-Token': csrfToken
+    //                 }
+    //             }).then(response => {
+    //                 return response.json().then(data => {
+    //                     return { status: response.status, body: data };
+    //                 });
+    //             }).then(data => {
+    //                 if (data.status < 300) {
+    //                     itemTable.ajax.reload();
+    //                     swalWithBootstrapButtons.fire({
+    //                         title: "Deleted!",
+    //                         text: data.body.message,
+    //                         icon: "success"
+    //                     });
+    //                 } else {
+    //                     swalWithBootstrapButtons.fire({
+    //                         title: "Deleted Failed!",
+    //                         text: data.body.message,
+    //                         icon: "error"
+    //                     });
+    //                 }
+    //             }).catch(error => {
+    //                 console.log(error);
+    //                 // var statusMessageDiv = document.getElementById('statusMessage');
+    //                 // statusMessageDiv.innerText = `Error: ${error}`;
+    //             });
+    //         } else if (
+    //             result.dismiss === Swal.DismissReason.cancel
+    //         ) {
+    //             swalWithBootstrapButtons.fire({
+    //                 title: "Cancelled",
+    //                 text: "Your data is safe :)",
+    //                 icon: "error"
+    //             });
+    //         }
+    //     });
+    // }
 </script>

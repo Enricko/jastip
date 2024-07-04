@@ -127,17 +127,18 @@
         serverSide: true,
         searching: true,
         responsive: true,
-        columnDefs: [
-            { "orderable": true, "targets": 0 },
-            { "orderable": false, "targets": '_all' }
+        lengthMenu: [
+            [10, 25, 50, 100, 200],
+            [10, 25, 50, 100, 200]
         ],
-        dom: 'Bfrtip',
+        dom: 'Blftip',
         buttons: [
             {
                 extend: 'copy',
                 text: '<i class="fas fa-copy"></i>',
                 className: 'btn btn-secondary',
-                titleAttr: 'Copy'
+                titleAttr: 'Copy',
+                footer:true
             },
             {
                 extend: 'excel',
@@ -166,7 +167,7 @@
                     return meta.row + 1;
                 }
             },
-            { data: 'id', className: 'text-center' },
+            { data: "id", className: "text-center", width: "10%" },
             { data: 'name', className: 'text-center' },
             { data: 'email', className: 'text-center' },
             { data: 'no_telepon', className: 'text-center' },
@@ -181,10 +182,11 @@
                         <div class="col-auto mb-1">
                             <button class="btn btn-warning btn-xs" id="edit_data" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="updateForm('${row.id}')"><i class="fas fa-pencil"></i></button>
                         </div>
-                        <div class="col-auto mb-1">
-                            <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>`;
+                        </div>`;
+                        // Masukkan String kalau mau pakai <- di hapus
+                        // <div class="col-auto mb-1">
+                        //     <button class="btn btn-danger btn-xs" id="delete_data" onclick="deleteData('${row.id}')"><i class="fas fa-trash-alt"></i></button>
+                        // </div>
                 }
             }
         ]
@@ -321,65 +323,65 @@
             .catch(error => console.error('Error:', error));
     }
 
-    function deleteData(id) {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-            });
-            swalWithBootstrapButtons.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                reverseButtons: true
-            }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/user/delete/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-Token': csrfToken
-                    }
-                }).then(response => {
-                    return response.json().then(data => {
-                        return { status: response.status, body: data };
-                    });
-                }).then(data => {
-                    if (data.status < 300) {
-                        itemTable.ajax.reload();
-                        swalWithBootstrapButtons.fire({
-                            title: "Deleted!",
-                            text: data.body.message,
-                            icon: "success"
-                        });
-                    } else {
-                        swalWithBootstrapButtons.fire({
-                            title: "Deleted Failed!",
-                            text: data.body.message,
-                            icon: "error"
-                        });
-                    }
+    // function deleteData(id) {
+    //     const swalWithBootstrapButtons = Swal.mixin({
+    //         customClass: {
+    //             confirmButton: "btn btn-success",
+    //             cancelButton: "btn btn-danger"
+    //         },
+    //         buttonsStyling: false
+    //         });
+    //         swalWithBootstrapButtons.fire({
+    //             title: "Are you sure?",
+    //             text: "You won't be able to revert this!",
+    //             icon: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonText: "Yes, delete it!",
+    //             cancelButtonText: "No, cancel!",
+    //             reverseButtons: true
+    //         }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             fetch(`/user/delete/${id}`, {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'X-CSRF-Token': csrfToken
+    //                 }
+    //             }).then(response => {
+    //                 return response.json().then(data => {
+    //                     return { status: response.status, body: data };
+    //                 });
+    //             }).then(data => {
+    //                 if (data.status < 300) {
+    //                     itemTable.ajax.reload();
+    //                     swalWithBootstrapButtons.fire({
+    //                         title: "Deleted!",
+    //                         text: data.body.message,
+    //                         icon: "success"
+    //                     });
+    //                 } else {
+    //                     swalWithBootstrapButtons.fire({
+    //                         title: "Deleted Failed!",
+    //                         text: data.body.message,
+    //                         icon: "error"
+    //                     });
+    //                 }
                     
-                }).catch(error => {
-                    console.log(error);
-                    // var statusMessageDiv = document.getElementById('statusMessage');
-                    // statusMessageDiv.innerText = `Error: ${error}`;
-                });
+    //             }).catch(error => {
+    //                 console.log(error);
+    //                 // var statusMessageDiv = document.getElementById('statusMessage');
+    //                 // statusMessageDiv.innerText = `Error: ${error}`;
+    //             });
                 
-            } else if (
-                /* Read more about handling dismissals below */
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire({
-                    title: "Cancelled",
-                    text: "Your imaginary file is safe :)",
-                    icon: "error"
-                });
-            }
-        });
-    }
+    //         } else if (
+    //             /* Read more about handling dismissals below */
+    //             result.dismiss === Swal.DismissReason.cancel
+    //         ) {
+    //             swalWithBootstrapButtons.fire({
+    //                 title: "Cancelled",
+    //                 text: "Your imaginary file is safe :)",
+    //                 icon: "error"
+    //             });
+    //         }
+    //     });
+    // }
 </script>
